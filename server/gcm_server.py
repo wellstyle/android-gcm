@@ -9,7 +9,7 @@ import urllib
 import urllib2
 import urlparse
 
-API_KEY = None
+API_KEY = 'AIzaSyCcwa5a_Us2or9brjTZ38wTxLddD-48M30'
 reg_id_set = set()
 
 class GCMHandler(BaseHTTPServer.BaseHTTPRequestHandler):
@@ -69,6 +69,7 @@ class GCMHandler(BaseHTTPServer.BaseHTTPRequestHandler):
       html += """<h3>Registered Ids</h3>
       <form action="/send" method="post">
         Message: <input name="msg" size="30" />
+        Custom1: <input name="custom1" size="30" />
         <input type="submit" value="Send" />
         <br />
         Devices:
@@ -128,6 +129,7 @@ class GCMHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     global reg_id_set
 
     msg = self.str_param(params, 'msg', 'Greetings from the cloud!')
+    custom1 = self.str_param(params, 'custom1', 'Hello gcm!!')
 
     reg_id_list = None
     if 'reg_id' in params and len(params['reg_id']) > 0:
@@ -140,7 +142,8 @@ class GCMHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     data = {
       'registration_ids' : reg_id_list,
       'data' : {
-        'msg' : msg
+        'content' : msg
+        ,'customField1' : custom1
       }
     }
 
@@ -216,8 +219,8 @@ def main(argv):
     sys.stderr.write('Missing API_KEY\n')
     sys.exit(1)
 
-  server = BaseHTTPServer.HTTPServer(('', 8080), GCMHandler)
-  print 'Starting server on port 8080'
+  server = BaseHTTPServer.HTTPServer(('', 8480), GCMHandler)
+  print 'Starting server on port 8480'
   server.serve_forever()
 
 if __name__ == '__main__':
